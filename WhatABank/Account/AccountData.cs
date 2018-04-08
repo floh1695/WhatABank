@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WhatABank
+namespace WhatABank.Account
 {
-    enum Special
+    [Serializable]
+    class AccountData
     {
-        HELP,
-        EXIT,
+        public double Amount;
     }
 }

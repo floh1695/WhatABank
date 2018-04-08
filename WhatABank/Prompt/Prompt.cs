@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WhatABank
+namespace WhatABank.PromptNS
 {
     class Prompt
     {
-
         public string PromptStyle { get; set; } = "> ";
 
         private List<Command> Commands = new List<Command>();
