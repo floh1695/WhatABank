@@ -24,7 +24,7 @@ namespace WhatABank
                     //Console.Write("password: ");
                     //var password = MaskedInput();
 
-                    var user = UserData.GetUserData(username);
+                    var user = UserStorage.Read(username);
                     var account = "checkings";
 
                     var accountPrompt = new Prompt();
@@ -71,29 +71,33 @@ namespace WhatABank
          */
         private static Command createTestCommand()
         {
-            return new Command("test", "testing fields", 
-                () => 
+            return new Command("test", "testing fields",
+                () =>
                 {
                     var prompt = new Prompt();
                     prompt.RegisterCommand(new Command("serialization", "Test serialization interactively",
-                        () => 
+                        () =>
                         {
-                            var user = UserData.GetUserData("serialization test user");
+                            var user = UserStorage.Read("serialization test user");
 
                             var serializationPrompt = new Prompt();
-                            serializationPrompt.RegisterCommand(new Command("display", "display all object data",
-                                () =>
-                                {
-                                    Console.WriteLine($"user.Name => {user.Name}");
-                                    foreach (var accountKey in user.Accounts.Keys)
-                                    {
-                                        Console.WriteLine($"user.Accounts[\"{accountKey}\"].Amount => {user.Accounts[accountKey].Amount}");
-                                    };
-                                }));
                             serializationPrompt.RegisterCommand(new Command("rw", "read/write test",
                                 () =>
                                 {
+                                    var originalName = user.Name;
 
+                                    UserStorage.Write(user);
+                                    Console.WriteLine("starting data");
+                                    UserService.Display(user);
+
+                                    Console.WriteLine("clobbered data");
+                                    user = new UserData("false name 1234567890");
+                                    user.Accounts["some fake account"] = new AccountData();
+                                    UserService.Display(user);
+
+                                    user = UserStorage.Read(originalName);
+                                    Console.WriteLine("original data");
+                                    UserService.Display(user);
                                 }));
 
                             serializationPrompt.Run();

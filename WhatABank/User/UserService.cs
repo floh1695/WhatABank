@@ -14,5 +14,14 @@ namespace WhatABank.User
         {
             return data.Accounts[accountName];
         }
+
+        internal static void Display(UserData user)
+        {
+            Console.WriteLine($"user.Name => {user.Name}");
+            foreach (var accountKey in user.Accounts.Keys)
+            {
+                Console.WriteLine($"user.Accounts[\"{accountKey}\"].Amount => {user.Accounts[accountKey].Amount}");
+            };
+        }
     }
 }

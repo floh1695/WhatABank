@@ -11,16 +11,10 @@ namespace WhatABank.User
     [Serializable]
     class UserData
     {
-        public string Name;
-        public Dictionary<string, AccountData> Accounts;
+        public string Name { get; }
+        public Dictionary<string, AccountData> Accounts { get; }
 
-        public static UserData GetUserData(string username)
-        {
-            return UserStorage.Read(username)
-                ?? new UserData(username);
-        }
-
-        private UserData(string name)
+        public UserData(string name)
         {
             Name = name;
             Accounts = new Dictionary<string, AccountData>();

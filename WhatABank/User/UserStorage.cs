@@ -10,20 +10,47 @@ namespace WhatABank.User
 {
     static class UserStorage
     {
-        private static void VerifyDirectoryStructure()
+        public static string MakeUrl(string name)
         {
-            throw new NotImplementedException();
+            return $"../../userdata/{name}.user";
         }
 
         public static UserData Read(string username)
         {
-            return null;
+            var bf = new BinaryFormatter();
+            try
+            {
+                var userFile = new FileStream(MakeUrl(username), FileMode.Open, FileAccess.Read, FileShare.None);
+                using (userFile)
+                {
+                    var data = (UserData)bf.Deserialize(userFile);
+                    Write(data);
+                    return data;
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Had to make a new one");
+                return new UserData(username);
+            }
         }
 
         public static void Write(UserData data)
         {
             var bf = new BinaryFormatter();
-            //var userFile = new FileStream("../../");
+            var userFile = new FileStream(MakeUrl(data.Name), FileMode.Create, FileAccess.Write, FileShare.None);
+            try
+            {
+                using (userFile)
+                {
+                    bf.Serialize(userFile, data);
+                }
+
+            }
+            catch
+            {
+                Console.WriteLine($"Could not write to file: \"{userFile.Name}\"");
+            }
         }
     }
 }
