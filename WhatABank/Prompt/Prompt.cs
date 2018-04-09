@@ -34,7 +34,18 @@ namespace WhatABank.PromptNS
                         ?? errorCommand;
                 }
 
-                command.Callback();
+                try
+                {
+                    command.Callback();
+                }
+                catch (Exception e) // This try/catch makes me feel ashamed...
+                {
+                    if (e.Message == "exit")
+                    {
+                        break;
+                    }
+                    throw e;
+                }
                 if (command.SpecialOption == Special.EXIT)
                 {
                     break;

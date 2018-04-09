@@ -6,6 +6,8 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 
+using WhatABank.Account;
+
 namespace WhatABank.User
 {
     static class UserStorage
@@ -50,6 +52,15 @@ namespace WhatABank.User
             catch
             {
                 Console.WriteLine($"Could not write to file: \"{userFile.Name}\"");
+            }
+        }
+
+        internal static void Delete(UserData user)
+        {
+            File.Delete(MakeUrl(user.Name));
+            foreach (var account in user.Accounts)
+            {
+                AccountLog.Delete(account.Value);
             }
         }
     }

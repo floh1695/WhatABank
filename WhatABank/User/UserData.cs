@@ -14,7 +14,7 @@ namespace WhatABank.User
         public string Name { get; }
         public Dictionary<string, AccountData> Accounts { get; }
 
-        public UserData(string name)
+        public UserData(string name, string password)
         {
             Name = name;
             Accounts = new Dictionary<string, AccountData>();

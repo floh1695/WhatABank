@@ -64,6 +64,18 @@ namespace WhatABank
                             UserStorage.Write(user);
                             UserService.Display(user);
                         }));
+                    accountPrompt.RegisterCommand(new Command("close", "close account",
+                        () =>
+                        {
+                            Console.WriteLine($"{user.Name}, are you sure you would like to close your accounts?");
+                            Console.WriteLine("write out \"yes\" to close your accounts");
+                            var response = Console.ReadLine();
+                            if (response == "yes")
+                            {
+                                UserStorage.Delete(user);
+                                throw new Exception("exit");
+                            }
+                        }));
 
                     Console.WriteLine($"welcome {user.Name}!");
                     accountPrompt.Run();
