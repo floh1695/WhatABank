@@ -15,13 +15,29 @@ namespace WhatABank.User
             return data.Accounts[accountName];
         }
 
-        internal static void Display(UserData user)
+        public static void Display(UserData user)
         {
-            Console.WriteLine($"user.Name => {user.Name}");
             foreach (var accountKey in user.Accounts.Keys)
             {
-                Console.WriteLine($"user.Accounts[\"{accountKey}\"].Amount => {user.Accounts[accountKey].Amount}");
+                Console.WriteLine($"{accountKey} => {user.Accounts[accountKey].Amount}");
             };
+        }
+
+        public static AccountData HandleAccountChoice(UserData user)
+        {
+            AccountData account;
+
+            Display(user);
+            while (true)
+            {
+                Console.Write("Which account? ");
+                var key = Console.ReadLine();
+                user.Accounts.TryGetValue(key, out account);
+                if (account != null) { break; }
+                Console.WriteLine($"\"{key}\" is not a valid account");
+            }
+
+            return account;
         }
     }
 }

@@ -59,8 +59,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Account\AccountData.cs" />
+    <Compile Include="Account\AccountLog.cs" />
     <Compile Include="Account\AccountService.cs" />
-    <Compile Include="Account\AccountStorage.cs" />
     <Compile Include="Prompt\Command.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Prompt\Prompt.cs" />

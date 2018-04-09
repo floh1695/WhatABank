@@ -25,41 +25,51 @@ namespace WhatABank
                     //var password = MaskedInput();
 
                     var user = UserStorage.Read(username);
-                    var account = "checkings";
+                    UserService.Display(user);
 
                     var accountPrompt = new Prompt();
-                    accountPrompt.RegisterCommand(new Command("set account", "set account data",
-                        () =>
-                        {
-                            var validAccountNames = new string[] { "checkings", "savings" };
-                            foreach (var accountName in validAccountNames) { Console.WriteLine($": {accountName}"); }
-                            Console.Write("what account would you like to use: ");
-                            var newAccount = Console.ReadLine();
-                            if (validAccountNames.Contains(newAccount)) { account = newAccount; }
-                            else { Console.WriteLine($"{newAccount} is not a valid account name"); }
-                        }));
                     accountPrompt.RegisterCommand(new Command("deposit", "deposit money into your account",
                         () =>
                         {
-                            Console.Write($"how much would you like to deposit into {account}? ");
+                            var account = UserService.HandleAccountChoice(user);
+                            Console.Write($"how much would you like to deposit into the account? ");
                             double amount = 0;
                             double.TryParse(Console.ReadLine(), out amount);
-                            Console.WriteLine(amount);
+                            AccountService.Deposit(account, amount);
+                            UserStorage.Write(user);
+                            UserService.Display(user);
                         }));
                     accountPrompt.RegisterCommand(new Command("withdraw", "withdraw money from your account",
                         () =>
                         {
-                            Console.Write($"how much would you like to withdraw from {account}");
+                            var account = UserService.HandleAccountChoice(user);
+                            Console.Write($"how much would you like to withdraw from the account? ");
                             double amount = 0;
                             double.TryParse(Console.ReadLine(), out amount);
-                            Console.WriteLine(amount);
+                            AccountService.Withdraw(account, amount);
+                            UserStorage.Write(user);
+                            UserService.Display(user);
+                        }));
+                    accountPrompt.RegisterCommand(new Command("transfer", "transfer to another account",
+                        () =>
+                        {
+                            Console.WriteLine("select account to withdraw from");
+                            var withdrawee = UserService.HandleAccountChoice(user);
+                            Console.WriteLine("select account to deposit to");
+                            var depositee = UserService.HandleAccountChoice(user);
+                            Console.Write($"how much would you like to transfer? ");
+                            double amount = 0;
+                            double.TryParse(Console.ReadLine(), out amount);
+                            AccountService.Transfer(withdrawee, depositee, amount);
+                            UserStorage.Write(user);
+                            UserService.Display(user);
                         }));
 
                     Console.WriteLine($"welcome {user.Name}!");
                     accountPrompt.Run();
                     Console.WriteLine("logging out");
                 }));
-            loginPrompt.RegisterCommand(createTestCommand());
+            //loginPrompt.RegisterCommand(CreateTestCommand());
 
             loginPrompt.Run();
             Console.WriteLine("goodbye!");
@@ -69,7 +79,7 @@ namespace WhatABank
         /**
          * Contains all interactive tests
          */
-        private static Command createTestCommand()
+        private static Command CreateTestCommand()
         {
             return new Command("test", "testing fields",
                 () =>
@@ -92,7 +102,7 @@ namespace WhatABank
 
                                     Console.WriteLine("clobbered data");
                                     user = new UserData("false name 1234567890");
-                                    user.Accounts["some fake account"] = new AccountData();
+                                    user.Accounts["some fake account"] = new AccountData("some fake account", "false name 1234567890");
                                     UserService.Display(user);
 
                                     user = UserStorage.Read(originalName);

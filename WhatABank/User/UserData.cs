@@ -20,7 +20,7 @@ namespace WhatABank.User
             Accounts = new Dictionary<string, AccountData>();
             foreach (var accountName in new string[] { "checkings", "savings" })
             {
-                Accounts[accountName] = new AccountData();
+                Accounts[accountName] = new AccountData(accountName, Name);
             }
         }
     }

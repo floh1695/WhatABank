@@ -12,7 +12,7 @@ namespace WhatABank.User
     {
         public static string MakeUrl(string name)
         {
-            return $"../../userdata/{name}.user";
+            return $"../../userdata/{name}.user.bin";
         }
 
         public static UserData Read(string username)
@@ -24,14 +24,14 @@ namespace WhatABank.User
                 using (userFile)
                 {
                     var data = (UserData)bf.Deserialize(userFile);
-                    Write(data);
                     return data;
                 }
             }
             catch
             {
-                Console.WriteLine("Had to make a new one");
-                return new UserData(username);
+                var data = new UserData(username);
+                Write(data);
+                return data;
             }
         }
 
