@@ -17,7 +17,7 @@ namespace WhatABank.User
             return $"../../userdata/{name}.user.bin";
         }
 
-        public static UserData Read(string username)
+        public static UserData Read(string username, string password)
         {
             var bf = new BinaryFormatter();
             try
@@ -26,12 +26,14 @@ namespace WhatABank.User
                 using (userFile)
                 {
                     var data = (UserData)bf.Deserialize(userFile);
-                    return data;
+                    if (data.TestPassword(password)) { return data; }
+                    throw new Exception("password error");
                 }
             }
-            catch
+            catch (Exception e)
             {
-                var data = new UserData(username);
+                if (e.Message == "password error") { throw e; } // This also makes me sick
+                var data = new UserData(username, password);
                 Write(data);
                 return data;
             }

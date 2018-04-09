@@ -21,10 +21,10 @@ namespace WhatABank
                     Console.Write("username: ");
                     var username = Console.ReadLine();
 
-                    //Console.Write("password: ");
-                    //var password = MaskedInput();
+                    Console.Write("password: ");
+                    var password = MaskedInput();
 
-                    var user = UserStorage.Read(username);
+                    var user = UserStorage.Read(username, password);
                     UserService.Display(user);
 
                     var accountPrompt = new Prompt();
@@ -100,7 +100,8 @@ namespace WhatABank
                     prompt.RegisterCommand(new Command("serialization", "Test serialization interactively",
                         () =>
                         {
-                            var user = UserStorage.Read("serialization test user");
+                            var password = "password";
+                            var user = UserStorage.Read("serialization test user", password);
 
                             var serializationPrompt = new Prompt();
                             serializationPrompt.RegisterCommand(new Command("rw", "read/write test",
@@ -113,11 +114,11 @@ namespace WhatABank
                                     UserService.Display(user);
 
                                     Console.WriteLine("clobbered data");
-                                    user = new UserData("false name 1234567890");
+                                    user = new UserData("false name 1234567890", "asdfklajsdfkljasdfklaj");
                                     user.Accounts["some fake account"] = new AccountData("some fake account", "false name 1234567890");
                                     UserService.Display(user);
 
-                                    user = UserStorage.Read(originalName);
+                                    user = UserStorage.Read(originalName, password);
                                     Console.WriteLine("original data");
                                     UserService.Display(user);
                                 }));
